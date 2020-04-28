@@ -17,7 +17,7 @@ Administrator
  Required
  Provide Subscription Id of the Azure.
 
- Example: .\updateWvdMgmtUxApiUrl.ps1  -AppName "Name of the Application" -SubscriptionID "Your Azure SubscriptionID"
+ Example: .\updateWvdMgmtUxApiUrl.ps1  -AppName "Name of the Application" -ApiName "Name of the API" -SubscriptionID "Your Azure SubscriptionID"
 #>
 
 param(
@@ -25,6 +25,10 @@ param(
 	[Parameter(Mandatory = $true)]
 	[ValidateNotNullOrEmpty()]
 	[string]$AppName,
+	
+	[Parameter(Mandatory = $true)]
+	[ValidateNotNullOrEmpty()]
+	[string]$ApiName,
 
 	[Parameter(Mandatory = $true)]
 	[ValidateNotNullOrEmpty()]
@@ -83,7 +87,7 @@ if ($RoleAssignment.RoleDefinitionName -eq "Owner" -or $RoleAssignment.RoleDefin
 	$kuduApiAuthorisationToken = Get-KuduApiAuthorisationHeaderValue $resourceGroupName $AppName
 
 
-	$ApiUrl = "https://$AppName-api.azurewebsites.net"
+	$ApiUrl = "https://$ApiName.azurewebsites.net"
 	$kuduApiUrl = "https://$AppName.scm.azurewebsites.net/api/vfs/site/wwwroot/"
 	[array]$AllPublishedFiles = Invoke-RestMethod -Uri $kuduApiUrl `
  		-Headers @{ "Authorization" = $kuduApiAuthorisationToken; "If-Match" = "*" } `
